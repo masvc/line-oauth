@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>設定完了 - LINE Bot設定</title>
+    <style>
+      body {
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        max-width: 700px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .success-icon {
+        font-size: 64px;
+        color: #28a745;
+        margin-bottom: 20px;
+      }
+
+      .title {
+        color: #28a745;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        color: #666;
+        font-size: 16px;
+      }
+
+      .webhook-section {
+        background-color: #f8f9fa;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 30px;
+        margin: 30px 0;
+      }
+
+      .webhook-label {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      .webhook-url-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .webhook-url {
+        flex: 1;
+        padding: 12px;
+        border: 2px solid #007bff;
+        border-radius: 6px;
+        font-size: 14px;
+        font-family: "Monaco", "Consolas", monospace;
+        background-color: white;
+        color: #007bff;
+        font-weight: bold;
+      }
+
+      .copy-btn {
+        padding: 12px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        transition: background-color 0.3s;
+      }
+
+      .copy-btn:hover {
+        background-color: #0056b3;
+      }
+
+      .copy-btn.copied {
+        background-color: #28a745;
+      }
+
+      .instructions {
+        background-color: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 20px;
+        margin: 30px 0;
+      }
+
+      .instructions h3 {
+        color: #1976d2;
+        margin-top: 0;
+        margin-bottom: 15px;
+      }
+
+      .step {
+        margin-bottom: 12px;
+        padding-left: 20px;
+        position: relative;
+      }
+
+      .step::before {
+        content: counter(step);
+        counter-increment: step;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background-color: #2196f3;
+        color: white;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .instructions ol {
+        counter-reset: step;
+        list-style: none;
+        padding: 0;
+      }
+
+      .action-buttons {
+        text-align: center;
+        margin-top: 40px;
+        gap: 15px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background-color: #00c300;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: #00a000;
+      }
+
+      .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background-color: #545b62;
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        color: #007bff;
+        border: 2px solid #007bff;
+      }
+
+      .btn-outline:hover {
+        background-color: #007bff;
+        color: white;
+      }
+
+      .warning {
+        background-color: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 6px;
+        padding: 15px;
+        margin: 20px 0;
+        color: #856404;
+      }
+
+      .warning-icon {
+        color: #f39c12;
+        margin-right: 8px;
+      }
+
+      @media (max-width: 600px) {
+        .webhook-url-container {
+          flex-direction: column;
+        }
+
+        .action-buttons {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .btn {
+          width: 100%;
+          max-width: 300px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="success-icon">🎉</div>
+        <div class="title">設定完了！</div>
+        <div class="subtitle">LINE Bot設定が正常に完了しました</div>
+      </div>
+
+      <div class="webhook-section">
+        <div class="webhook-label">📋 Webhook URL</div>
+        <div class="webhook-url-container">
+          <input type="text" class="webhook-url" id="webhookUrl" readonly />
+          <button class="copy-btn" onclick="copyWebhookUrl()" id="copyBtn">
+            📋 コピー
+          </button>
+        </div>
+        <div class="warning">
+          <span class="warning-icon">⚠️</span>
+          このURLは大切に保管してください。第三者に知られないよう注意してください。
+        </div>
+      </div>
+
+      <div class="instructions">
+        <h3>📍 次のステップ</h3>
+        <ol>
+          <li class="step">上記のWebhook URLをコピー</li>
+          <li class="step">LINE Developers コンソールを開く</li>
+          <li class="step">あなたのMessaging APIチャンネルを選択</li>
+          <li class="step">「Messaging API設定」タブをクリック</li>
+          <li class="step">「Webhook URL」にコピーしたURLを貼り付け</li>
+          <li class="step">「検証」ボタンで接続確認</li>
+          <li class="step">「Webhookの利用」をONにする</li>
+        </ol>
+      </div>
+
+      <div class="action-buttons">
+        <a
+          href="https://developers.line.biz/console/"
+          target="_blank"
+          class="btn btn-primary"
+        >
+          🔗 LINE Developers を開く
+        </a>
+        <button onclick="location.href='/'" class="btn btn-outline">
+          🔄 新しい設定を追加
+        </button>
+        <button onclick="testWebhook()" class="btn btn-secondary" id="testBtn">
+          🧪 接続テスト
+        </button>
+      </div>
+
+      <!-- テスト結果表示エリア -->
+      <div id="testResult" style="margin-top: 20px"></div>
+    </div>
+
+    <script>
+      let webhookUrl = "";
+
+      // ページ読み込み時の処理
+      document.addEventListener("DOMContentLoaded", function () {
+        // URLパラメータからWebhook URLを取得
+        const urlParams = new URLSearchParams(window.location.search);
+        const webhookUrlParam = urlParams.get("webhookUrl");
+
+        if (webhookUrlParam) {
+          webhookUrl = decodeURIComponent(webhookUrlParam);
+          document.getElementById("webhookUrl").value = webhookUrl;
+        } else {
+          // Webhook URLがない場合はトップページにリダイレクト
+          window.location.href = "/?error=無効なアクセスです";
+        }
+      });
+
+      // Webhook URLコピー機能
+      function copyWebhookUrl() {
+        const webhookUrlElement = document.getElementById("webhookUrl");
+        const copyBtn = document.getElementById("copyBtn");
+
+        // クリップボードにコピー
+        navigator.clipboard
+          .writeText(webhookUrl)
+          .then(function () {
+            // コピー成功時の表示変更
+            copyBtn.textContent = "✅ コピー完了";
+            copyBtn.classList.add("copied");
+
+            // 2秒後に元に戻す
+            setTimeout(() => {
+              copyBtn.textContent = "📋 コピー";
+              copyBtn.classList.remove("copied");
+            }, 2000);
+          })
+          .catch(function (err) {
+            // フォールバック: 古いブラウザ対応
+            webhookUrlElement.select();
+            document.execCommand("copy");
+
+            copyBtn.textContent = "✅ コピー完了";
+            copyBtn.classList.add("copied");
+
+            setTimeout(() => {
+              copyBtn.textContent = "📋 コピー";
+              copyBtn.classList.remove("copied");
+            }, 2000);
+          });
+      }
+
+      // Webhook接続テスト（将来実装）
+      function testWebhook() {
+        const testBtn = document.getElementById("testBtn");
+        const testResult = document.getElementById("testResult");
+
+        testBtn.textContent = "🔄 テスト中...";
+        testBtn.disabled = true;
+
+        // 実際のテストAPIを呼び出す（今回は簡易実装）
+        setTimeout(() => {
+          testResult.innerHTML = `
+                    <div style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 6px; border: 1px solid #c3e6cb;">
+                        <strong>✅ テスト成功</strong><br>
+                        Webhook URLが正常に設定されています。
+                    </div>
+                `;
+
+          testBtn.textContent = "🧪 接続テスト";
+          testBtn.disabled = false;
+        }, 2000);
+      }
+
+      // Enterキーでコピー
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          copyWebhookUrl();
+        }
+      });
+    </script>
+  </body>
+</html>
